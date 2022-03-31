@@ -11,7 +11,7 @@ pragma solidity ^0.8.0;
  ╚═════╝░╚══════╝░╚═════╝░╚══════╝╚═╝░░╚══╝  ╚═════╝░░░░╚═╝░░░╚═╝░░╚═╝░░╚═╝╚═╝░░╚═╝╚═╝░░░░░╚═════╝░
   Contract Developer: Stinky
   Description: Degen Dwarfs Community Art Collection includes exclusive 1/1's donated by 
-               community members
+               community members.
 ******************************************************************************************************/
 
 import "./ERC1155D.sol";
