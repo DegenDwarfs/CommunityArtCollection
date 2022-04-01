@@ -1,8 +1,5 @@
 //Degen Dwarf Gnosis Safe
-const BENEFICIARY = "";
-const NAME = "Degen Dwarfs Community Art Collection";
-const TICKER = "DDCAC";
-const TOKEN_URI = "https://assets.degendwarfs.io/json/ddcac/";
+const TOKEN_URI = "https://assets.degendwarfs.io/json/";
 
 async function main() {
   if (network.name === "hardhat") {
@@ -23,7 +20,7 @@ async function main() {
   console.log("Account balance:", (await deployer.getBalance()).toString());
 
   const Token = await ethers.getContractFactory("DDCAC");
-  const token = await Token.deploy(BENEFICIARY, NAME, TICKER, TOKEN_URI);
+  const token = await Token.deploy(TOKEN_URI);
   await token.deployed();
 
   console.log("NFT address:", token.address);

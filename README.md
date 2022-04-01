@@ -10,7 +10,7 @@ Part of Roadmap Phase 1 - Admire the Art
 - They will be extremely limited to start (given we have not yet sold out) so as not to dilute the main collection.
 
 
-## Run Contract Locally
+## Install Contract Locally
 
 The first things you need to do are cloning this repository and installing its
 dependencies:
@@ -19,4 +19,17 @@ dependencies:
 git clone https://github.com/stinkyfi/DegenDwarfs.git
 cd DegenDwarfs
 npm install
+```
+
+Once installed, run Hardhat's testing network:
+
+```sh
+npx hardhat node
+```
+## Deploy Locally
+On a new terminal, go to the repository's root folder and run this to
+deploy your contract:
+
+```sh
+npx hardhat run scripts/deploy.js --network localhost
 ```
