@@ -18,16 +18,13 @@ import "@openzeppelin/contracts/utils/Counters.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/security/Pausable.sol";
 import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
-import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
 import "@openzeppelin/contracts/token/ERC721/extensions/ERC721Enumerable.sol";
 
 contract DDCAC is ERC721, ERC721Enumerable, Ownable, Pausable {
-    
     using Counters for Counters.Counter;
 
     /// @notice Counter for number of mints
     Counters.Counter public _tokenIds;
-
     /// @dev Base URI used for token metadata
     string private _baseTokenUri;
 
@@ -100,5 +97,27 @@ contract DDCAC is ERC721, ERC721Enumerable, Ownable, Pausable {
         }
 
         return string(buffer);
+    }    
+
+    function _beforeTokenTransfer(
+        address from,
+        address to,
+        uint256 tokenId
+    ) internal virtual override(ERC721, ERC721Enumerable) {
+        super._beforeTokenTransfer(from, to, tokenId);
+
+        // do stuff before every transfer
+        // e.g. check that vote (other than when minted) 
+        // being transferred to registered candidate
+    }
+    
+    /**
+     * @dev See {IERC165-supportsInterface}.
+     */
+    function supportsInterface(bytes4 interfaceId) public view virtual override(ERC721, ERC721Enumerable) returns (bool) {
+        return
+            interfaceId == type(IERC721).interfaceId ||
+            interfaceId == type(IERC721Metadata).interfaceId ||
+            super.supportsInterface(interfaceId);
     }    
 }
