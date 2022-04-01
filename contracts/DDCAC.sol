@@ -1,6 +1,5 @@
 // SPDX-License-Identifier: MIT
-
-pragma solidity ^0.8.0;
+pragma solidity ^0.8.7;
 
 /*****************************************************************************************************
  ██████╗░███████╗░██████╗░███████╗███╗░░██╗  ██████╗░░██╗░░░░░░░██╗░█████╗░██████╗░███████╗░██████╗
@@ -14,41 +13,68 @@ pragma solidity ^0.8.0;
                community members.
 ******************************************************************************************************/
 
-import "./ERC1155D.sol";
+import "@openzeppelin/contracts/utils/Strings.sol";
 import "@openzeppelin/contracts/utils/Counters.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
+import "@openzeppelin/contracts/security/Pausable.sol";
+import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
+import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
+import "@openzeppelin/contracts/token/ERC721/extensions/ERC721Enumerable.sol";
 
-contract DDCAC is ERC1155, Ownable {
+contract DDCAC is ERC721, ERC721Enumerable, Ownable, Pausable {
     
     using Counters for Counters.Counter;
 
     /// @notice Counter for number of mints
     Counters.Counter public _tokenIds;
 
-    constructor(string memory uri) ERC1155(uri) {}
+    /// @dev Base URI used for token metadata
+    string private _baseTokenUri;
 
-    function setURI(string memory newuri) public {
-        _setURI(newuri);
+    constructor(
+        string memory _tokenURI
+    ) ERC721("Degen Dwarfs Community Art Collection", "DDCAC") {
+        _baseTokenUri = _tokenURI;
     }
 
-    function mint (address to) public onlyOwner {
-        _tokenIds.increment();
-        _mint(to, _tokenIds.current(), 1, '');
+    /*
+     * @notice Mint a Degen Dwarf NFT
+     * @param _mintAmount How many NFTs would you like to batch mint?
+     * @param _winner Address of the winner    
+     */    
+    function reward(uint256 _mintAmount, address _winner) external whenNotPaused onlyOwner {        
+        _safeMint(_winner, _mintAmount);
     }
 
-    function burn(address owner, uint256 id, uint256 value) public {
-        _burn(owner, id, value);
+    /*
+     * @notice set the baseURI
+     * @param baseURI
+     */  
+    function setBaseURI(string memory baseURI) public onlyOwner {
+        _baseTokenUri = baseURI;
+    }  
+
+    /* @notice Pause Degen Dwarf minting */  
+    function pauseMinting() external onlyOwner {
+        _pause();
     }
 
-    function burnBatch(address owner, uint256[] memory ids, uint256[] memory values) public {
-        _burnBatch(owner, ids, values);
+    /* @notice Resume Degen Dwarf minting*/  
+    function unpauseMinting() external onlyOwner {
+        _unpause();
+    }      
+
+    // Internal functions
+    /* @notice Returns the baseURI */      
+    function _baseURI() internal view virtual override returns (string memory) {
+        return _baseTokenUri;
     }
 
     // Private functions
     /* @notice Returns the baseURI */         
-    function tokenURI(uint256 tokenId) public view virtual returns (string memory) {
-        return string(abi.encodePacked(uri(tokenId), toString(tokenId), ".json"));
-    }    
+    function tokenURI(uint256 tokenId) public view virtual override returns (string memory) {
+        return string(abi.encodePacked(_baseURI(), toString(tokenId), ".json"));
+    }
 
     function toString(uint256 value) internal pure returns (string memory) {
     // Inspired by OraclizeAPI's implementation - MIT license
