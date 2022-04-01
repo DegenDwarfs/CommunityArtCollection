@@ -36,11 +36,11 @@ contract DDCAC is ERC721, ERC721Enumerable, Ownable, Pausable {
 
     /*
      * @notice Mint a Degen Dwarf NFT
-     * @param _mintAmount How many NFTs would you like to batch mint?
      * @param _winner Address of the winner    
      */    
-    function reward(uint256 _mintAmount, address _winner) external whenNotPaused onlyOwner {        
-        _safeMint(_winner, _mintAmount);
+    function reward(address _winner) external whenNotPaused onlyOwner {        
+        _tokenIds.increment();
+        _safeMint(_winner,  _tokenIds.current());
     }
 
     /*
