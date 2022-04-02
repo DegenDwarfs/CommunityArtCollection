@@ -26,10 +26,28 @@ Once installed, run Hardhat's testing network:
 ```sh
 npx hardhat node
 ```
-## Deploy Locally
+## Deploy
 On a new terminal, go to the repository's root folder and run this to
 deploy your contract:
 
 ```sh
-npx hardhat run scripts/deploy.js --network localhost
+npx hardhat run scripts/deploy.js --network <network>
 ```
+
+## Verify
+On a new terminal, go to the repository's root folder and run this to
+deploy your contract:
+
+```sh
+npx hardhat verify --network <network> <contract_address> <"BaseURI String">
+```
+
+# User Manual
+
+## Minting
+The `reward` function is used for minting, and it accepts 1 parameter (address) for the winner.
+Only the contract owner can call this, and the NFT will be minted directly into the winners address.
+
+## BaseURI
+The baseURI is set during deployment and can be changed using the `setBaseURI` function. This function accepts 1 parameter (string)
+for the URL of the baseURI. This contract concats `.json` at the end of the string, and this can be removed on [line 73](https://github.com/DegenDwarfs/CommunityArtCollection/blob/e511de346e98e353c7823ef3aabaa6da2e6ff836/contracts/DDCAC.sol#L73).
