@@ -50,4 +50,4 @@ Only the contract owner can call this, and the NFT will be minted directly into 
 
 ## BaseURI
 The baseURI is set during deployment and can be changed using the `setBaseURI` function. This function accepts 1 parameter (string)
-for the URL of the baseURI. This contract concats `.json` at the end of the string, and this can be removed on `line 73`.
+for the URL of the baseURI. This contract concats `.json` at the end of the string, and this can be removed on [line 73](https://github.com/DegenDwarfs/CommunityArtCollection/blob/e511de346e98e353c7823ef3aabaa6da2e6ff836/contracts/DDCAC.sol#L73).
