@@ -9,8 +9,19 @@ Part of Roadmap Phase 1 - Admire the Art
 - ONLY Dwarf Holders qualify to receive these NFTs!
 - They will be extremely limited to start (given we have not yet sold out) so as not to dilute the main collection.
 
+# User Manual
 
-## Install Contract Locally
+### Minting
+The `reward` function is used for minting, and it accepts 1 parameter (address) for the winner.
+Only the contract owner can call this, and the NFT will be minted directly into the winners address.
+
+### BaseURI
+The baseURI is set during deployment and can be changed using the `setBaseURI` function. This function accepts 1 parameter (string)
+for the URL of the baseURI. This contract concats `.json` at the end of the string, and this can be removed on [line 73](https://github.com/DegenDwarfs/CommunityArtCollection/blob/e511de346e98e353c7823ef3aabaa6da2e6ff836/contracts/DDCAC.sol#L73).
+
+# Dev Manual
+
+### Install Contract Dependecies
 
 The first things you need to do are cloning this repository and installing its
 dependencies:
@@ -21,12 +32,7 @@ cd DegenDwarfs
 npm install
 ```
 
-Once installed, run Hardhat's testing network:
-
-```sh
-npx hardhat node
-```
-## Deploy
+### Deploy
 On a new terminal, go to the repository's root folder and run this to
 deploy your contract:
 
@@ -34,20 +40,10 @@ deploy your contract:
 npx hardhat run scripts/deploy.js --network <network>
 ```
 
-## Verify
+### Verify
 On a new terminal, go to the repository's root folder and run this to
 deploy your contract:
 
 ```sh
 npx hardhat verify --network <network> <contract_address> <"BaseURI String">
 ```
-
-# User Manual
-
-## Minting
-The `reward` function is used for minting, and it accepts 1 parameter (address) for the winner.
-Only the contract owner can call this, and the NFT will be minted directly into the winners address.
-
-## BaseURI
-The baseURI is set during deployment and can be changed using the `setBaseURI` function. This function accepts 1 parameter (string)
-for the URL of the baseURI. This contract concats `.json` at the end of the string, and this can be removed on [line 73](https://github.com/DegenDwarfs/CommunityArtCollection/blob/e511de346e98e353c7823ef3aabaa6da2e6ff836/contracts/DDCAC.sol#L73).
