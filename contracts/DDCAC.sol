@@ -27,6 +27,7 @@ contract DDCAC is ERC721, ERC721Enumerable, Ownable, Pausable {
     Counters.Counter public _tokenIds;
     /// @dev Base URI used for token metadata
     string private _baseTokenUri;
+    address[] public _winners;
 
     constructor(
         string memory _tokenURI
@@ -41,6 +42,11 @@ contract DDCAC is ERC721, ERC721Enumerable, Ownable, Pausable {
     function reward(address _winner) external whenNotPaused onlyOwner {        
         _tokenIds.increment();
         _safeMint(_winner,  _tokenIds.current());
+        _winners[_tokenIds.current()] = _winner;
+    }
+
+    function getWinners() public view returns(address[] memory) {
+        return _winners;
     }
 
     /*
