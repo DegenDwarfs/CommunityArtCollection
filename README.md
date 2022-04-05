@@ -12,11 +12,21 @@ Part of Roadmap Phase 1 - Admire the Art
 # User Manual
 
 ### Minting
-The `reward` function is used for minting, and it accepts 1 parameter (address) for the winner.
-Only the contract owner can call this, and the NFT will be minted directly into the winners address.
+The `reward(address _winner, address _artist)` function is used for minting, and it accepts 2 parameters (address) for the winner 
+and address for the artist to receive donations. Only the contract owner can call this, and the NFT will be minted directly into
+the winners address.
+
+### History
+The `getWinners()` function returns an array of addresses, with no input parameters. Array starts at 1 and uses
+tokenId as the index.
+
+### Artist Donations
+This contract allows Artist who donate art pieces to receive donations. The function `artistDonation(uint256 _tokenId)` accepts a tokenId for 
+the corresponding art piece. Example: You want to donate to the artist of NFT ID # 1, you will pass the value 1 into the function.
+Donations are handled in the gas token, set the payable amount to be donated. 
 
 ### BaseURI
-The baseURI is set during deployment and can be changed using the `setBaseURI` function. This function accepts 1 parameter (string)
+The baseURI is set during deployment and can be changed using the `setBaseURI(string memory baseURI)` function. This function accepts 1 parameter (string)
 for the URL of the baseURI. This contract concats `.json` at the end of the string, and this can be removed on [line 73](https://github.com/DegenDwarfs/CommunityArtCollection/blob/e511de346e98e353c7823ef3aabaa6da2e6ff836/contracts/DDCAC.sol#L73).
 
 # Dev Manual

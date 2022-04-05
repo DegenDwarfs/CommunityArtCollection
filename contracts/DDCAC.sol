@@ -27,7 +27,20 @@ contract DDCAC is ERC721, ERC721Enumerable, Ownable, Pausable {
     Counters.Counter public _tokenIds;
     /// @dev Base URI used for token metadata
     string private _baseTokenUri;
-    address[] public _winners;
+
+    struct Art {
+        // Collection ID #
+        uint256 id;
+        // Winners Address
+        address winner;
+        // Address for Artist Donation
+        address artistDonation;
+        // Total Donations Raised
+        uint256 totalDonations;
+    }
+
+    /// @dev Mapping of created character structs from token ID
+    mapping(uint256 => Art) internal _collection;
 
     constructor(
         string memory _tokenURI
@@ -39,23 +52,25 @@ contract DDCAC is ERC721, ERC721Enumerable, Ownable, Pausable {
      * @notice Mint a Degen Dwarf NFT
      * @param _winner Address of the winner    
      */    
-    function reward(address _winner) external whenNotPaused onlyOwner {        
-        _tokenIds.increment();
+    function reward(address _winner, address _artist) external whenNotPaused onlyOwner {        
+        Art memory newArt;
+        newArt.id = _tokenIds.current();
+        newArt.winner = _winner;
+        newArt.artistDonation = _artist;
+        newArt.totalDonations = 0;
+        _collection[newArt.id] = newArt;
         _safeMint(_winner,  _tokenIds.current());
-        _winners[_tokenIds.current()] = _winner;
-    }
-
-    function getWinners() public view returns(address[] memory) {
-        return _winners;
+        _tokenIds.increment();
     }
 
     /*
-     * @notice set the baseURI
-     * @param baseURI
-     */  
-    function setBaseURI(string memory baseURI) public onlyOwner {
-        _baseTokenUri = baseURI;
-    }  
+     * @notice Donate to Artist of a specific Art piece
+     * @param _tokenId Address of the winner    
+     */    
+    function artistDonation(uint256 _tokenId) payable external {
+        require(msg.value > 0, "Donations must be greater than 0");
+        payable(_collection[_tokenId].artistDonation).transfer(msg.value);
+    }
 
     /* @notice Pause Degen Dwarf minting */  
     function pauseMinting() external onlyOwner {
@@ -68,12 +83,26 @@ contract DDCAC is ERC721, ERC721Enumerable, Ownable, Pausable {
     }      
 
     // Internal functions
+
     /* @notice Returns the baseURI */      
     function _baseURI() internal view virtual override returns (string memory) {
         return _baseTokenUri;
     }
 
-    // Private functions
+    // public functions
+
+    /* @notice Returns an address array of winners */   
+    function collectionPieces(uint256 _tokenId) public view returns(Art memory) {
+        return _collection[_tokenId];
+    }
+
+    /*
+     * @notice set the baseURI
+     * @param baseURI
+     */  
+    function setBaseURI(string memory baseURI) public onlyOwner {
+        _baseTokenUri = baseURI;
+    }      
     /* @notice Returns the baseURI */         
     function tokenURI(uint256 tokenId) public view virtual override returns (string memory) {
         return string(abi.encodePacked(_baseURI(), toString(tokenId), ".json"));
