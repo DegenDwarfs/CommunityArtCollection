@@ -17,6 +17,7 @@ import "@openzeppelin/contracts/utils/Strings.sol";
 import "@openzeppelin/contracts/utils/Counters.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/security/Pausable.sol";
+import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 import "@openzeppelin/contracts/token/ERC721/extensions/ERC721Enumerable.sol";
 
@@ -24,22 +25,24 @@ contract DDCAC is ERC721, ERC721Enumerable, Ownable, Pausable {
     using Counters for Counters.Counter;
 
     /// @notice Counter for number of mints
-    Counters.Counter public _tokenIds;
+    Counters.Counter public _artIds;
     /// @dev Base URI used for token metadata
     string private _baseTokenUri;
 
     struct Art {
         // Collection ID #
         uint256 id;
+        // Mint Date
+        uint256 mintDate;
         // Winners Address
         address winner;
         // Address for Artist Donation
         address artistDonation;
-        // Total Donations Raised
-        uint256 totalDonations;
+        // Count of Donations
+        uint256 donationCount;
     }
 
-    /// @dev Mapping of created character structs from token ID
+    /// @dev Array of Art (Collection)
     mapping(uint256 => Art) internal _collection;
 
     constructor(
@@ -52,24 +55,34 @@ contract DDCAC is ERC721, ERC721Enumerable, Ownable, Pausable {
      * @notice Mint a Degen Dwarf NFT
      * @param _winner Address of the winner    
      */    
-    function reward(address _winner, address _artist) external whenNotPaused onlyOwner {        
-        Art memory newArt;
-        newArt.id = _tokenIds.current();
-        newArt.winner = _winner;
-        newArt.artistDonation = _artist;
-        newArt.totalDonations = 0;
-        _collection[newArt.id] = newArt;
-        _safeMint(_winner,  _tokenIds.current());
-        _tokenIds.increment();
+    function reward(address _winner, address _artist) external whenNotPaused onlyOwner {   
+        uint256 id = _artIds.current();     
+        _collection[id] = Art(id, block.timestamp, _winner, _artist, 0);
+        _safeMint(_winner,  id);
+        _artIds.increment();
     }
 
     /*
      * @notice Donate to Artist of a specific Art piece
-     * @param _tokenId Address of the winner    
+     * @param _artId Address of the winner    
      */    
-    function artistDonation(uint256 _tokenId) payable external {
+    function artistTokenDonation(uint256 _artId, address tokenAddress, uint256 amount) payable external {
+        amount = amount * 1e18;
+        require(amount > 0, "Donations must be greater than 0");
+        require(amount > IERC20(tokenAddress).balanceOf(_msgSender()),"You don't own enough tokens to send this amount.");
+        require(amount > IERC20(tokenAddress).allowance(_msgSender(), address(this)),"Not enough token allowance.");
+        IERC20(tokenAddress).transfer(_collection[_artId].artistDonation, amount);
+        _collection[_artId].donationCount++;
+    }
+
+    /*
+     * @notice Donate to Artist of a specific Art piece
+     * @param _artId Address of the winner    
+     */    
+    function artistDonation(uint256 _artId) payable external {
         require(msg.value > 0, "Donations must be greater than 0");
-        payable(_collection[_tokenId].artistDonation).transfer(msg.value);
+        payable(_collection[_artId].artistDonation).transfer(msg.value);
+        _collection[_artId].donationCount++;
     }
 
     /* @notice Pause Degen Dwarf minting */  
@@ -92,9 +105,28 @@ contract DDCAC is ERC721, ERC721Enumerable, Ownable, Pausable {
     // public functions
 
     /* @notice Returns an address array of winners */   
-    function collectionPieces(uint256 _tokenId) public view returns(Art memory) {
-        return _collection[_tokenId];
+    function getArtPiece(uint256 _artId) public view returns(Art memory) {
+        return _collection[_artId];
     }
+
+    /* @notice Returns an array of winning addresses */   
+    function getWinners() public view returns(address[] memory) {
+        address[] memory winners;
+        for (uint256 i = 0; i < totalSupply(); i++) {
+            winners[i] = _collection[i].winner;
+        }
+        return winners;
+    }    
+
+    /* @notice Returns an array of all Art */   
+    function getCollection() public view returns(Art[] memory) {
+        Art[] memory collection = new Art[](totalSupply());
+        for (uint256 i = 0; i < totalSupply(); i++) {
+            Art storage art = _collection[i];
+            collection[i] = art;
+        }
+        return collection;
+    }    
 
     /*
      * @notice set the baseURI
