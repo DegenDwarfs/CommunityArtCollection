@@ -11,27 +11,62 @@ Part of Roadmap Phase 1 - Admire the Art
 
 # User Manual
 
-### Minting
-The `reward(address _winner, address _artist)` function is used for minting, and it accepts 2 parameters (address) for the winner 
-and address for the artist to receive donations. Only the contract owner can call this, and the NFT will be minted directly into
-the winners address.
+## Minting
+```
+reward(address _winner, address _artist)
+``` 
+Winners `Address` and Artist Donation `Address` are input parameters.
+This function will mint directly into the winners address, and can only be called by the contract owner.
+Creating a new `Art` piece in the collection, this contract tracks dates and donation counts.
 
-### History
-The `getWinners()` function returns an array of addresses, with no input parameters. Array starts at 1 and uses
-tokenId as the index.
+## History
+```
+ArtWinners()
+```
+No input parameters. This function returns an array of addresses (winners).
 
-### Artist Donations
-This contract allows Artist who donate art pieces to receive donations. The function `artistDonation(uint256 _tokenId)` accepts a tokenId for 
-the corresponding art piece. Example: You want to donate to the artist of NFT ID # 1, you will pass the value 1 into the function.
-Donations are handled in the gas token, set the payable amount to be donated. 
+```
+getArtPiece(uint256 _artId)
+``` 
+NFT art ID number `(uint256)` as only paramenter. It will return Art scrut containing all information on the piece.
 
-### BaseURI
-The baseURI is set during deployment and can be changed using the `setBaseURI(string memory baseURI)` function. This function accepts 1 parameter (string)
-for the URL of the baseURI. This contract concats `.json` at the end of the string, and this can be removed on [line 73](https://github.com/DegenDwarfs/CommunityArtCollection/blob/e511de346e98e353c7823ef3aabaa6da2e6ff836/contracts/DDCAC.sol#L73).
+```
+getCollection()
+```
+No input parameters. This function returns an array of Art scruts (collection).
+
+## Artist Donations
+```
+artistDonation(uint256 _artId)
+```
+NFT art ID number `(uint256)` as only paramenter. 
+Example: You want to donate to the artist of NFT ID # 1, you will pass the value 1 into the function.
+This contract allows Artist who donate art pieces to receive donations. 
+Donations are handled in the gas token, set the payable amount to be donated.
+To donate ERC-20 tokens, please see `artistTokenDonation` function.
+
+```
+artistTokenDonation(uint256 _artId, address tokenAddress, uint256 amount)
+```
+> :warning:<b>Warning:</b> This contract converts the user amount of tokens entered into full tokens. Do not enter value in wei
+
+NFT art ID number `(uint256)`, `(address)` to the ERC-20 token you will donate, the `(uint256)`amount of whole tokens you want to donate.
+Example: You want to donate to the artist of NFT ID # 1, you will pass the value 1 into the function.
+This contract allows Artist who donate art pieces to receive donations. 
+<br>
+
+
+## BaseURI
+```
+setBaseURI(string memory baseURI)
+```
+baseURI `(string)` URL is the only input parameter.
+The baseURI is set during deployment and can be changed using this function. 
+This contract concats `.json` at the end of the string, and this can be removed on [line 73](https://github.com/DegenDwarfs/CommunityArtCollection/blob/e511de346e98e353c7823ef3aabaa6da2e6ff836/contracts/DDCAC.sol#L73).
 
 # Dev Manual
 
-### Install Contract Dependecies
+## Install Contract Dependecies
 
 The first steps are to clone the repository and install its dependencies:
 
@@ -41,7 +76,7 @@ cd DegenDwarfs
 npm install
 ```
 
-### Deploy
+## Deploy
 On a new terminal, go to the repository's root folder and run this to
 deploy your contract:
 
@@ -49,7 +84,7 @@ deploy your contract:
 npx hardhat run scripts/deploy.js --network <network>
 ```
 
-### Verify
+## Verify
 On a new terminal, go to the repository's root folder and run this to
 deploy your contract:
 
