@@ -8,7 +8,7 @@ pragma solidity ^0.8.7;
  ██║░░██║██╔══╝░░██║░░╚██╗██╔══╝░░██║╚████║  ██║░░██║░░████╔═████║░██╔══██║██╔══██╗██╔══╝░░░╚═══██╗
  ██████╔╝███████╗╚██████╔╝███████╗██║░╚███║  ██████╔╝░░╚██╔╝░╚██╔╝░██║░░██║██║░░██║██║░░░░░██████╔╝
  ╚═════╝░╚══════╝░╚═════╝░╚══════╝╚═╝░░╚══╝  ╚═════╝░░░░╚═╝░░░╚═╝░░╚═╝░░╚═╝╚═╝░░╚═╝╚═╝░░░░░╚═════╝░
-  Contract Developer: Stinky
+  Contract Developer: Stinky (@nomamesgwei)
   Description: Degen Dwarfs Community Art Collection includes exclusive 1/1's donated by 
                community members.
 ******************************************************************************************************/
@@ -21,7 +21,7 @@ import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 import "@openzeppelin/contracts/token/ERC721/extensions/ERC721Enumerable.sol";
 
-contract DDCAC is ERC721, ERC721Enumerable, Ownable, Pausable {
+contract CommunityArtCollection is ERC721, ERC721Enumerable, Ownable, Pausable {
     using Counters for Counters.Counter;
 
     /// @notice Counter for number of mints
@@ -45,6 +45,11 @@ contract DDCAC is ERC721, ERC721Enumerable, Ownable, Pausable {
     /// @dev Array of Art (Collection)
     mapping(uint256 => Art) internal _collection;
 
+
+    /*
+     * @notice This contract is designed to be used by Multisigs
+     * @param _tokenURI the URL for the tokenURI (metadata)          
+     */    
     constructor(
         string memory _tokenURI
     ) ERC721("Degen Dwarfs Community Art Collection", "DDCAC") {
@@ -52,8 +57,9 @@ contract DDCAC is ERC721, ERC721Enumerable, Ownable, Pausable {
     }
 
     /*
-     * @notice Mint a Degen Dwarf NFT
-     * @param _winner Address of the winner    
+     * @notice Mint a Degen Dwarf NFT directly into the winners address
+     * @param _winner Address of the winner   
+     * @param _artist Address for Artist Donations         
      */    
     function reward(address _winner, address _artist) external whenNotPaused onlyOwner {   
         uint256 id = _artIds.current();     
@@ -63,15 +69,19 @@ contract DDCAC is ERC721, ERC721Enumerable, Ownable, Pausable {
     }
 
     /*
-     * @notice Donate to Artist of a specific Art piece
-     * @param _artId Address of the winner    
+     * @notice Donate ERC-20 Token(s) to Artist of a specific Art piece
+     * @param _artId Address of the winner
+     * @param _tokenAddress Address for ERC-20 Token you want to Donate
+     * @param _amount Number in whole tokens that you want to donate. (ETHER value not GWEI, making it easier for normies to use on Etherscan.)
      */    
-    function artistTokenDonation(uint256 _artId, address tokenAddress, uint256 amount) payable external {
-        amount = amount * 1e18;
-        require(amount > 0, "Donations must be greater than 0");
-        require(amount > IERC20(tokenAddress).balanceOf(_msgSender()),"You don't own enough tokens to send this amount.");
-        require(amount > IERC20(tokenAddress).allowance(_msgSender(), address(this)),"Not enough token allowance.");
-        IERC20(tokenAddress).transfer(_collection[_artId].artistDonation, amount);
+    function artistTokenDonation(uint256 _artId, address _tokenAddress, uint256 _amount) payable external {
+        require(_amount > 0, "Donations must be greater than 0");
+        // No current plans to develop frontend, simplifying integer entry for Normies.
+        // Wei to Ether
+        _amount = _amount * 1e18;
+        require(_amount > IERC20(_tokenAddress).balanceOf(_msgSender()),"You don't own enough tokens to send this amount.");
+        require(_amount > IERC20(_tokenAddress).allowance(_msgSender(), address(this)),"Not enough token allowance.");
+        IERC20(_tokenAddress).transfer(_collection[_artId].artistDonation, _amount);
         _collection[_artId].donationCount++;
     }
 
@@ -104,7 +114,9 @@ contract DDCAC is ERC721, ERC721Enumerable, Ownable, Pausable {
 
     // public functions
 
-    /* @notice Returns an address array of winners */   
+    /* @notice Returns an address array of winners 
+     * @param _artId Address of the winner    
+     */   
     function getArtPiece(uint256 _artId) public view returns(Art memory) {
         return _collection[_artId];
     }
@@ -135,7 +147,10 @@ contract DDCAC is ERC721, ERC721Enumerable, Ownable, Pausable {
     function setBaseURI(string memory baseURI) public onlyOwner {
         _baseTokenUri = baseURI;
     }      
-    /* @notice Returns the baseURI */         
+    /* 
+     * @notice Returns the baseURI 
+     * @param tokenId 
+     */         
     function tokenURI(uint256 tokenId) public view virtual override returns (string memory) {
         return string(abi.encodePacked(_baseURI(), toString(tokenId), ".json"));
     }
@@ -166,6 +181,11 @@ contract DDCAC is ERC721, ERC721Enumerable, Ownable, Pausable {
         return string(buffer);
     }    
 
+    /*
+     * Why Override? Without this, you will get the 2 errors below. 
+     * Derived contract must override function "_beforeTokenTransfer". Two or more base classes define function with same name and parameter types.
+     * Derived contract must override function "supportsInterface". Two or more base classes define function with same name and parameter types.
+     */
     function _beforeTokenTransfer(
         address from,
         address to,
