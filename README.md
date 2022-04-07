@@ -91,3 +91,10 @@ deploy your contract:
 ```sh
 npx hardhat verify --network <network> <contract_address> <"BaseURI String">
 ```
+
+
+## ABI
+Build a front-end for this contract by using the ABI located in [scripts/CommunityArtCollection.json](https://github.com/DegenDwarfs/CommunityArtCollection/blob/maxUtility/scripts/CommunityArtCollection.json)
+
+
+<img src="https://ethereum.org/static/a110735dade3f354a46fc2446cd52476/db4de/eth-home-icon.webp" data-canonical-src="https://ethereum.org/static/a110735dade3f354a46fc2446cd52476/db4de/eth-home-icon.webp" width="12" height="18" />  Coming to Ethreum Mainnet
