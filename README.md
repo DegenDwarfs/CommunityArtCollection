@@ -28,7 +28,7 @@ No input parameters. This function returns an array of addresses (winners).
 ```
 getArtPiece(uint256 _artId)
 ``` 
-NFT art ID number `(uint256)` as only paramenter. It will return Art scrut containing all information on the piece.
+NFT art ID number `(uint256)` as only parameter. It will return Art scrut containing all information on the piece.
 
 ```
 getCollection()
@@ -52,7 +52,7 @@ artistTokenDonation(uint256 _artId, address tokenAddress, uint256 amount)
 
 NFT art ID number `(uint256)`, `(address)` to the ERC-20 token you will donate, the `(uint256)`amount of whole tokens you want to donate.
 Example: You want to donate to the artist of NFT ID # 1, you will pass the value 1 into the function.
-This contract allows Artist who donate art pieces to receive donations. 
+This contract allows Artists who donate art pieces to receive donations. 
 <br>
 
 
