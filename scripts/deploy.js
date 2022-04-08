@@ -1,5 +1,5 @@
 //Degen Dwarf Gnosis Safe
-const TOKEN_URI = "https://assets.degendwarfs.io/json/";
+const TOKEN_URI = "https://assets.degendwarfs.io/artcollection/json/";
 
 async function main() {
   if (network.name === "hardhat") {
