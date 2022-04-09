@@ -72,16 +72,13 @@ contract CommunityArtCollection is ERC721, ERC721Enumerable, Ownable, Pausable {
      * @notice Donate ERC-20 Token(s) to Artist of a specific Art piece
      * @param _artId Address of the winner
      * @param _tokenAddress Address for ERC-20 Token you want to Donate
-     * @param _amount Number in whole tokens that you want to donate. (ETHER value not GWEI, making it easier for normies to use on Etherscan.)
+     * @param _amount Number in whole tokens that you want to donate. (WEI value not ETHER!)
      */    
     function artistTokenDonation(uint256 _artId, address _tokenAddress, uint256 _amount) external {
         require(_amount > 0, "Donations must be greater than 0");
-        // No current plans to develop frontend, simplifying integer entry for Normies.
-        // Wei to Ether
-        _amount = _amount * 1e18;
-        require(_amount > IERC20(_tokenAddress).balanceOf(_msgSender()),"You don't own enough tokens to send this amount.");
-        require(_amount > IERC20(_tokenAddress).allowance(_msgSender(), address(this)),"Not enough token allowance.");
-        IERC20(_tokenAddress).transfer(_collection[_artId].artistDonation, _amount);
+        require(IERC20(_tokenAddress).balanceOf(_msgSender()) > _amount, "You don't own enough tokens to send this amount.");
+        require(IERC20(_tokenAddress).allowance(_msgSender(), address(this)) > _amount, "Not enough token allowance.");
+        IERC20(_tokenAddress).transferFrom(_msgSender(), _collection[_artId].artistDonation, _amount);
         _collection[_artId].donationCount++;
     }
 
