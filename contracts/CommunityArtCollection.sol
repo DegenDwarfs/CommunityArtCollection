@@ -74,7 +74,7 @@ contract CommunityArtCollection is ERC721, ERC721Enumerable, Ownable, Pausable {
      * @param _tokenAddress Address for ERC-20 Token you want to Donate
      * @param _amount Number in whole tokens that you want to donate. (ETHER value not GWEI, making it easier for normies to use on Etherscan.)
      */    
-    function artistTokenDonation(uint256 _artId, address _tokenAddress, uint256 _amount) payable external {
+    function artistTokenDonation(uint256 _artId, address _tokenAddress, uint256 _amount) external {
         require(_amount > 0, "Donations must be greater than 0");
         // No current plans to develop frontend, simplifying integer entry for Normies.
         // Wei to Ether
