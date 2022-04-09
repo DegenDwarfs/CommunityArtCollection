@@ -78,7 +78,7 @@ npm install
 
 ## Deploy
 On a new terminal, go to the repository's root folder and run this to
-deploy your contract:
+deploy the contract:
 
 ```sh
 npx hardhat run scripts/deploy.js --network <network>
@@ -86,12 +86,19 @@ npx hardhat run scripts/deploy.js --network <network>
 
 ## Verify
 On a new terminal, go to the repository's root folder and run this to
-deploy your contract:
+verify the contract:
 
 ```sh
 npx hardhat verify --network <network> <contract_address> <"BaseURI String">
 ```
 
+## Test
+On a new terminal, go to the repository's root folder and run this to
+test the contract:
+
+```sh
+npx hardhat test
+```
 
 ## ABI
 Build a front-end for this contract by using the ABI located in [scripts/CommunityArtCollection.json](https://github.com/DegenDwarfs/CommunityArtCollection/blob/maxUtility/scripts/CommunityArtCollection.json)

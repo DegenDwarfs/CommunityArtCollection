@@ -1,96 +1,142 @@
-// This is an exmaple test file. Hardhat will run every *.js file in `test/`,
-// so feel free to add new ones.
+/*****************************************************************************************************
+ ██████╗░███████╗░██████╗░███████╗███╗░░██╗  ██████╗░░██╗░░░░░░░██╗░█████╗░██████╗░███████╗░██████╗
+ ██╔══██╗██╔════╝██╔════╝░██╔════╝████╗░██║  ██╔══██╗░██║░░██╗░░██║██╔══██╗██╔══██╗██╔════╝██╔════╝
+ ██║░░██║█████╗░░██║░░██╗░█████╗░░██╔██╗██║  ██║░░██║░╚██╗████╗██╔╝███████║██████╔╝█████╗░░╚█████╗░
+ ██║░░██║██╔══╝░░██║░░╚██╗██╔══╝░░██║╚████║  ██║░░██║░░████╔═████║░██╔══██║██╔══██╗██╔══╝░░░╚═══██╗
+ ██████╔╝███████╗╚██████╔╝███████╗██║░╚███║  ██████╔╝░░╚██╔╝░╚██╔╝░██║░░██║██║░░██║██║░░░░░██████╔╝
+ ╚═════╝░╚══════╝░╚═════╝░╚══════╝╚═╝░░╚══╝  ╚═════╝░░░░╚═╝░░░╚═╝░░╚═╝░░╚═╝╚═╝░░╚═╝╚═╝░░░░░╚═════╝░
+  Contract Developer: Stinky (@nomamesgwei)
+  Description: Degen Dwarfs Community Art Collection includes exclusive 1/1's donated by 
+               community members.
+******************************************************************************************************/
 
-// Hardhat tests are normally written with Mocha and Chai.
-
-// We import Chai to use its asserting functions here.
 const { expect } = require("chai");
 const { ethers, waffle } = require("hardhat");
-const BigNumber = require('bignumber.js');
-// `describe` is a Mocha function that allows you to organize your tests. It's
-// not actually needed, but having your tests organized makes debugging them
-// easier. All Mocha functions are available in the global scope.
 
-// `describe` recieves the name of a section of your test suite, and a callback.
-// The callback must define the tests of that section. This callback can't be
-// an async function.
 describe("Degen Dwarfs Community Art Collection (DDCAC)", function () {
-  // Mocha has four functions that let you hook into the the test runner's
-  // lifecyle. These are: `before`, `beforeEach`, `after`, `afterEach`.
-
-  // They're very useful to setup the environment for tests, and to clean it
-  // up after they run.
-
-  // A common pattern is to declare some variables, and assign them in the
-  // `before` and `beforeEach` callbacks.
-
+  let NFT;
+  let DDCAC;
+  let ERC20;
   let Token;
-  let hardhatToken;
   let owner;
   let addr1;
   let addr2;
   let addrs;
+  let provider;
 
-  // `beforeEach` will run before each test, re-deploying the contract every
-  // time. It receives a callback, which can be async.
   beforeEach(async function () {
-    // Get the ContractFactory and Signers here.
-    Token = await ethers.getContractFactory("CommunityArtCollection");
+    provider = waffle.provider;
+
+    NFT = await ethers.getContractFactory("CommunityArtCollection");
+    ERC20 = await ethers.getContractFactory("TEST");
+
     [owner, addr1, addr2, ...addrs] = await ethers.getSigners();
+    
+    DDCAC = await NFT.deploy("https://assets.degendwarfs.io/artcollection/json/");
+    await DDCAC.deployed();
+    Token = await ERC20.deploy(owner.address, ethers.utils.parseEther("100"));
+    await Token.deployed();
 
-    // To deploy our contract, we just have to call Token.deploy() and await
-    // for it to be deployed(), which happens onces its transaction has been
-    // mined.
-    hardhatToken = await Token.deploy("https://assets.degendwarfs.io/artcollection/json/");
-
-    // We can interact with the contract by calling `hardhatToken.method()`
-    await hardhatToken.deployed();
+    await Token.increaseAllowance(DDCAC.address, ethers.utils.parseEther("10"));
   });
 
-  // You can nest describe calls to create subsections.
   describe("Deployment", function () {
-    // `it` is another Mocha function. This is the one you use to define your
-    // tests. It receives the test name, and a callback function.
-
-    // If the callback function is async, Mocha will `await` it.
-    it("Should set the right owner", async function () {
-      // Expect receives a value, and wraps it in an assertion objet. These
-      // objects have a lot of utility methods to assert values.
-
-      // This test expects the owner variable stored in the contract to be equal
-      // to our Signer's owner.
-      expect(await hardhatToken.owner()).to.equal(owner.address);
+    it("Verify Address Owner", async function () {
+      expect(await DDCAC.owner()).to.equal(owner.address);
     });
+
+    it("Verify $TEST allowance equals 10", async function () {
+      expect(await Token.allowance(owner.address, DDCAC.address)).to.equal(ethers.utils.parseEther("10"));
+    });
+
+    it("Verify $DDCAC supply is 0", async function () {
+      expect(await DDCAC.totalSupply()).to.equal(0);
+    });
+
   });
 
   describe("Mint", function () {
-    it("Mint Token 0 directly to the winner", async function () {
-      //Winner: addr1, Artist: addr2
-      await hardhatToken.reward(addr1.address, addr2.address);
-      const nftOwner = await hardhatToken.ownerOf(0);
+
+    it("Verify Supply equals 0", async function () {
+      let supply = await DDCAC.totalSupply();
+      expect(supply).to.be.equal(0);
+
+    });
+
+    it("Mint NFT", async function () {
+      await DDCAC.reward(addr1.address, addr2.address);
+    });
+
+    it("Verify Supply equals 1", async function () {
+      await DDCAC.reward(addr1.address, addr2.address);
+      supply = await DDCAC.totalSupply();
+      expect(supply).to.be.equal(1);
+      let nftOwner = await DDCAC.ownerOf(0);
       expect(nftOwner).to.equal(addr1.address);
     });
 
+    it("Verify addr1 owns NFT #0", async function () {
+      await DDCAC.reward(addr1.address, addr2.address);
+      supply = await DDCAC.totalSupply();
+      expect(supply).to.be.equal(1);
+      let nftOwner = await DDCAC.ownerOf(0);
+      expect(nftOwner).to.equal(addr1.address);
+      nftOwner = await DDCAC.ownerOf(0);
+      expect(nftOwner).to.equal(addr1.address);
+    });
   });
 
   describe("Gas Token Donation", function () {
-    it("Mint, Check Balance, Call Function, Verify Balance", async function () {
-      const provider = waffle.provider;
-      //Mint Token
-      await hardhatToken.reward(addr1.address, addr2.address);
-      //Check Gas Token Balances
-      const donorBalance = await provider.getBalance(addr1.address);
-      const artistBalance = await provider.getBalance(addr2.address);
+
+    it("Verify Starting Balances", async function () {
+      let donorBalance = await provider.getBalance(addr1.address);
+      let artistBalance = await provider.getBalance(addr2.address);
       expect(donorBalance).to.equal(ethers.utils.parseEther("10000"));
       expect(artistBalance).to.equal(ethers.utils.parseEther("10000"));
-      //Call Artist Donation
-      const overrides = {value: ethers.utils.parseEther("1.0")};
-      await hardhatToken.artistDonation(0, overrides);
-      //Verify the Address Balance after test
-      const artistTipped = await provider.getBalance(addr2.address);
-      expect(artistTipped).to.equal(ethers.utils.parseEther("10001"));
     });
 
+    it("Donate Tokens", async function () {
+      await DDCAC.reward(addr1.address, addr2.address);
+      let overrides = {value: ethers.utils.parseEther("1")};
+      await DDCAC.artistDonation(0, overrides);
+    });
+
+    it("Verify Final Balance", async function () {
+      let artistBalance = await provider.getBalance(addr2.address);
+      expect(artistBalance).to.equal(ethers.utils.parseEther("10001"));
+    });
   });
 
+  describe("ERC-20 Token Donation", function () {
+    it("Verify Token Balances", async function () {
+      let donorBalance = await Token.balanceOf(owner.address);
+      let artistBalance = await Token.balanceOf(addr2.address);
+      expect(donorBalance).to.equal(ethers.utils.parseEther("100"));
+      expect(artistBalance).to.equal(ethers.utils.parseEther("0"));
+    });
+
+    it("Verify Allowance", async function () {
+      let allownace = await Token.allowance(owner.address, DDCAC.address);
+      expect(allownace).to.equal(ethers.utils.parseEther("10"));
+    });
+
+    it("Call Function", async function () {
+      await DDCAC.reward(addr1.address, addr2.address);
+      expect(await DDCAC.totalSupply()).to.be.equal(1);
+      let donorBalance = await Token.balanceOf(owner.address);
+      expect(donorBalance).to.equal(ethers.utils.parseEther("100"));
+      await DDCAC.artistTokenDonation(0, Token.address, ethers.utils.parseEther("1"));
+    });
+
+    it("VVerify Final Balances", async function () {
+      await DDCAC.reward(addr1.address, addr2.address);
+      let donorBalance = await Token.balanceOf(owner.address);
+      let artistBalance = await Token.balanceOf(addr2.address);
+      await DDCAC.artistTokenDonation(0, Token.address, ethers.utils.parseEther("1"));
+      donorBalance = await Token.balanceOf(owner.address);
+      expect(donorBalance).to.equal(ethers.utils.parseEther("99"));
+      artistBalance = await Token.balanceOf(addr2.address);
+      expect(artistBalance).to.equal(ethers.utils.parseEther("1"));
+    });
+  });
 });
