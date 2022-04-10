@@ -1,5 +1,6 @@
 <img src="https://github.com/DegenDwarfs/CommunityArtCollection/blob/main/images/commArt.png">
 The Dwarf Community Art Collection.
+<br><br>
 Part of Roadmap Phase 1 - Admire the Art
 
 - Each NFT(ERC-721) is an exclusive 1/1 donated by a community member.
@@ -8,6 +9,12 @@ Part of Roadmap Phase 1 - Admire the Art
 - Any community member can contribute, and the Dwarf art is fair use.
 - ONLY Dwarf Holders qualify to receive these NFTs!
 - They will be extremely limited to start (given we have not yet sold out) so as not to dilute the main collection.
+<br><br>
+
+<img src="https://ethereum.org/static/a110735dade3f354a46fc2446cd52476/db4de/eth-home-icon.webp" data-canonical-src="https://ethereum.org/static/a110735dade3f354a46fc2446cd52476/db4de/eth-home-icon.webp" width="12" height="18" /> Contract Address:
+```
+0xAfc1DECec1D08358C9Ac9570BaAd74d9a773D9c5
+```
 
 # User Manual
 
