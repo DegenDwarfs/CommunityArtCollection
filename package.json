@@ -19,7 +19,9 @@
     "url": "https://github.com/DegenDwarfs/CommunityArtCollection/issues"
   },
   "homepage": "https://github.com/DegenDwarfs/CommunityArtCollection#readme",
-  "dependencies": {},
+  "dependencies": {
+    "hardhat": "^2.9.3"
+  },
   "devDependencies": {},
   "keywords": []
 }
