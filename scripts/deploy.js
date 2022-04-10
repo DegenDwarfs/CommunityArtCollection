@@ -1,5 +1,5 @@
 //Degen Dwarf Gnosis Safe
-const TOKEN_URI = "https://assets.degendwarfs.io/json/";
+const TOKEN_URI = "https://assets.degendwarfs.io/artcollection/json/";
 
 async function main() {
   if (network.name === "hardhat") {
@@ -19,7 +19,7 @@ async function main() {
 
   console.log("Account balance:", (await deployer.getBalance()).toString());
 
-  const Token = await ethers.getContractFactory("DDCAC");
+  const Token = await ethers.getContractFactory("CommunityArtCollection");
   const token = await Token.deploy(TOKEN_URI);
   await token.deployed();
 
@@ -41,10 +41,10 @@ function saveFrontendFiles(token) {
     JSON.stringify({ DDCAC: token.address}, undefined, 2)
   );
 
-  const TokenArtifact = artifacts.readArtifactSync("DDCAC");
+  const TokenArtifact = artifacts.readArtifactSync("CommunityArtCollection");
 
   fs.writeFileSync(
-    contractsDir + "/DDCAC.json",
+    contractsDir + "/CommunityArtCollection.json",
     JSON.stringify(TokenArtifact, null, 2)
   );
 }

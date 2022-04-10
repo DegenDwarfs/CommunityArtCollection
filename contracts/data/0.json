@@ -1,0 +1,48 @@
+{
+    "name": "3D Dwarf (Degen Dwarfs #815)",
+    "description": "Degen Dwarfs Community Art Collection first art piece. Donated by 3D artist OBLOMOV, and won by community member Spleen",
+    "image": "https://assets.degendwarfs.io/artcollection/media/ContestWinnerRenderFinal.mp4",
+    "artist": "OBLOMOV",
+    "attributes": [
+        {
+        "trait_type": "Background",
+        "value": "Banana Pop"
+        },
+        {
+        "trait_type": "Rug",
+        "value": "Farmers' Hay"
+        },
+        {
+        "trait_type": "Weapon",
+        "value": "Gherkin Poker"
+        },
+        {
+        "trait_type": "Legs",
+        "value": "Geta"
+        },
+        {
+        "trait_type": "Torso",
+        "value": "Olympic Garbs"
+        },
+        {
+        "trait_type": "Head",
+        "value": "Basic"
+        },
+        {
+        "trait_type": "Beard",
+        "value": "Yeehaw Sideburns"
+        },
+        {
+        "trait_type": "Face",
+        "value": "Nakamoto"
+        },
+        {
+        "trait_type": "Headpiece",
+        "value": "Ice Cube"
+        },
+        {
+        "trait_type": "Item",
+        "value": "Bitcoin Gaunlet Sword"
+        }
+    ]
+}
