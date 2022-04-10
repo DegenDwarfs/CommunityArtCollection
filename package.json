@@ -20,6 +20,7 @@
   },
   "homepage": "https://github.com/DegenDwarfs/CommunityArtCollection#readme",
   "dependencies": {
+    "@ethereum-waffle/provider": "^4.0.0",
     "hardhat": "^2.9.3"
   },
   "devDependencies": {
