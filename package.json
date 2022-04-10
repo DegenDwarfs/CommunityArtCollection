@@ -1,0 +1,22 @@
+{
+  "name": "communityartcollection",
+  "version": "1.0.0",
+  "description": "<img src=\"https://github.com/DegenDwarfs/CommunityArtCollection/blob/main/images/commArt.png\">\r The Dwarf Community Art Collection.\r Part of Roadmap Phase 1 - Admire the Art",
+  "main": "hardhat.config.js",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/DegenDwarfs/CommunityArtCollection.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/DegenDwarfs/CommunityArtCollection/issues"
+  },
+  "homepage": "https://github.com/DegenDwarfs/CommunityArtCollection#readme"
+}
