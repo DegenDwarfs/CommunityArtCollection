@@ -1,4 +1,7 @@
+[![solidity - v0.8.7](https://img.shields.io/badge/solidity-v0.8.7-2ea44f?logo=solidity)](https://github.com/degendwarfs)
+
 <img src="https://github.com/DegenDwarfs/CommunityArtCollection/blob/main/images/commArt.png">
+
 The Dwarf Community Art Collection.
 <br><br>
 Part of Roadmap Phase 1 - Admire the Art
