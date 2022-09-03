@@ -5,8 +5,6 @@ require("@nomiclabs/hardhat-etherscan");
 // project. It imports a Hardhat task definition, that can be used for
 // testing the frontend.
 
-const PRIVATE_KEY = ""
-
 module.exports = {
   solidity: "0.8.7",
   settings: {
@@ -24,20 +22,6 @@ module.exports = {
       url: "http://localhost:8545",
       chainId: 1337,
       allowUnlimitedContractSize: true,
-    },
-    mainnet: {
-      url: "https://eth-mainnet.alchemyapi.io/v2/API_KEY_HERE",
-      accounts: [`${PRIVATE_KEY}`]
-    },
-    rinkeby: {
-      url: "https://rinkeby.infura.io/v3/API_KEY_HERE",
-      chainId: 4,
-      accounts: [`${PRIVATE_KEY}`]
     }
-  },
-  etherscan: {
-    // Your API key for Etherscan
-    // Obtain one at https://etherscan.io/
-    apiKey: ""
   }
 };
