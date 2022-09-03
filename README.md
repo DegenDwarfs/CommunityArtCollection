@@ -1,4 +1,4 @@
-[![solidity - v0.8.7](https://img.shields.io/badge/solidity-v0.8.7-2ea44f?logo=solidity)](https://github.com/degendwarfs)
+[![solidity - v0.8.7](https://img.shields.io/badge/solidity-v0.8.7-00d0ee?logo=solidity)](https://github.com/degendwarfs) <img alt="GitHub Workflow Status (branch)" src="https://img.shields.io/github/workflow/status/DegenDwarfs/CommunityArtCollection/Hardhat%20Test/main?label=Test"> <img alt="GitHub Workflow Status (branch)" src="https://img.shields.io/github/workflow/status/DegenDwarfs/CommunityArtCollection/Deployment/main?label=Deployment">
 
 <img src="https://github.com/DegenDwarfs/CommunityArtCollection/blob/main/images/commArt.png">
 
